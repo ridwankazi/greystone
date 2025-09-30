@@ -31,9 +31,48 @@ docker compose up --build
 ```
 
 - API: `http://localhost:8000`
-- Postgres: exposed on `localhost:5432` (db: `greystone`, user: `greystone`, password: `greystone`)
+- Postgres: exposed on `localhost:5432` (db/user/pass: greystone)
 
 The app uses `DATABASE_URL` from the container environment and connects to the `db` service automatically.
+
+### Migrations (Alembic)
+
+- Configure DB url:
+  - Locally (SQLite default): nothing to do.
+  - With Postgres (e.g., Docker or local): set `DATABASE_URL`, e.g.
+```bash
+export DATABASE_URL=postgresql+psycopg://greystone:greystone@localhost:5432/greystone
+```
+
+- Create a new empty revision:
+```bash
+make migrate-new NAME="add_users_table"
+```
+
+- Autogenerate a revision from models:
+```bash
+make migrate-autogen NAME="init_models"
+```
+
+- Apply migrations:
+```bash
+make migrate-upgrade            # to head
+make migrate-upgrade TARGET=+1  # or to a specific target
+```
+
+- Rollback:
+```bash
+make migrate-downgrade          # one step
+make migrate-downgrade TARGET=base
+```
+
+- Inspect:
+```bash
+make migrate-history
+make migrate-current
+```
+
+Alembic files live under `alembic/`. Models are discovered via `app.db.base:Base.metadata`.
 
 ### Configuration
 
@@ -66,6 +105,9 @@ app/
     base.py
     users.py
     loans.py
+alembic/
+  env.py
+  versions/
 ```
 
 ### Endpoints (v1)
