@@ -21,13 +21,26 @@ uvicorn app.main:app --reload
 
 The API will be available at `http://localhost:8000`. Interactive docs: `http://localhost:8000/docs`.
 
+### Docker
+
+This project is containerized with separate containers for the API and the database.
+
+- Build and run:
+```bash
+docker compose up --build
+```
+
+- API: `http://localhost:8000`
+- Postgres: exposed on `localhost:5432` (db: `greystone`, user: `greystone`, password: `greystone`)
+
+The app uses `DATABASE_URL` from the container environment and connects to the `db` service automatically.
+
 ### Configuration
 
-- `DATABASE_URL` environment variable is supported. Defaults to a local SQLite file: `sqlite:///./data/app.db`.
-- To override, export the env var before running:
-```bash
-export DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/greystone
-```
+- `DATABASE_URL` environment variable is supported. Defaults to a local SQLite file: `sqlite:///./data/app.db` when running outside Docker.
+- In Docker, `docker-compose.yml` sets:
+  - `DATABASE_URL=postgresql+psycopg://greystone:greystone@db:5432/greystone`
+- To change credentials, edit `docker-compose.yml` in both services accordingly.
 
 ### Project Layout
 

@@ -1,0 +1,21 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache
+.mypy_cache
+
+# Envs and local files
+.env
+.venv
+
+# VCS
+.git
+.gitignore
+
+# OS
+.DS_Store
+
+# Local data
+/data
